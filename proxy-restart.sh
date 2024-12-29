@@ -2,6 +2,28 @@
 
 main () {
   local PROXY_ID='i-0db77541139990ecd'
+  local stop='False'
+
+  while getopts s-: opt; do
+    OPTARG="${!OPTIND}"
+    [[ "${opt}" = - ]] && opt="-${OPTARG}"
+
+    case "${opt}" in
+      s|-stop)
+        stop="${OPTARG}"
+        shift
+        ;;
+    esac
+  done
+
+  if [ "${stop}" == 'True' ]; then
+    aws ec2 stop-instances --instance-ids "${PROXY_ID}" >> /dev/null
+    exit 0
+  elif [ ! "${stop}" == 'False' ]; then
+    echo "not match stop option ${stop}"
+    exit 1
+  fi
+  
   local DNS_NAME="$(aws ec2 describe-instances | jq -r ".Reservations[].Instances[] | select(.InstanceId==\"${PROXY_ID}\") | .PublicDnsName")"
 
   if [ ! -z "${DNS_NAME}" ]; then
