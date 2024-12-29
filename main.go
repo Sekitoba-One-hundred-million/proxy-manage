@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/fsnotify/fsnotify"
-  "github.com/kansei/sekitoba-proxy-manage/lib"
+	"github.com/kansei/sekitoba-proxy-manage/lib"
 )
 
 const dnsFilePath = "/Volumes/Gilgamesh/proxy/domain"
@@ -78,7 +78,11 @@ func manageProxy(gen chan int) {
           restartProxy()
         }
       default:
-        continue
+        if( ! lib.IsFile( dnsFilePath ) ) {
+          restartProxy()
+        } else {
+          continue
+        }
       }
     }
   }
