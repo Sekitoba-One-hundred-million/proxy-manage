@@ -71,19 +71,10 @@ func manageProxy(gen chan int) {
     case _ = <-gen:
       return
     default:
-      select {
-      case event, _ := <-watcher.Events:
-        if( event.Op&fsnotify.Remove == fsnotify.Remove &&
-          event.Name == dnsFilePath ) {
-          restartProxy()
-        }
-      default:
-        if( ! lib.IsFile( dnsFilePath ) ) {
-          restartProxy()
-        } else {
-          continue
-        }
+      if( !lib.IsFile( dnsFilePath ) ) {
+        restartProxy()
       }
+      break
     }
   }
 }

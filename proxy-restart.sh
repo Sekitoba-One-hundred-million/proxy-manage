@@ -1,7 +1,7 @@
 ## !/bin/bash
 
 main () {
-  local PROXY_ID='i-0db77541139990ecd'
+  local PROXY_ID='i-0619be4cc740fa700'
   local stop='False'
 
   while getopts s-: opt; do
